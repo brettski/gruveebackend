@@ -26,18 +26,17 @@ jobs:
           # parse version out of .version file
           VNAME=$(head -n 1 .version)
           echo "Line retrieved from .version: $VNAME"
-          # VERSION=$(echo $VLINE | awk -F':' '{print $1}' | egrep -o "v.*")
+          #VERSION=$(echo $VLINE | awk -F':' '{print $1}' | egrep -o "v.*")
           #VERSION=$(if [[ "$VLINE" =~ (v[^:]*): ]] ; then echo ${BASH_REMATCH[1]}; else exit 99; fi)
-          VERSION="v1.0.0-beta.11"
+          VERSION="v1.0.0-beta.12"
           echo "The found version is $VERSION"
           if [ -z $VERSION ]; then exit 99; fi
           # Create tag on commit
-          echo "curl version"
-          curl --version
           #curl -s -X POST https://api.github.com/repos/PixelogicDev/gruveebackend/git/refs \
           curl -s -X POST https://api.github.com/repos/brettski/gruveebackend/git/refs \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          -d '{ "ref": "refs/tags/$VERSION", "sha": "$GITHUB_SHA" }'
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -d '{ "ref": "refs/tags/$VERSION", "sha": "${{ secrets.GITHUB_SHA }}" }'
           # create config file from secret
-          echo $PROD_CONFIG_YAML > ../../internal/config.yaml
+          #echo "write file"
+          echo ${{ secrets.PROD_CONFIG_YAML }} > ../../internal/config.yaml
           cat ../../internal/config.yaml
