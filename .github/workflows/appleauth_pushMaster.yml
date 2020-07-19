@@ -35,7 +35,7 @@ jobs:
           #curl -s -X POST https://api.github.com/repos/PixelogicDev/gruveebackend/git/refs \
           curl -s -X POST https://api.github.com/repos/brettski/gruveebackend/git/refs \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -d '{ "ref": "refs/tags/$VERSION", "sha": "${{ secrets.GITHUB_SHA }}" }'
+          -d '{ "ref": "refs/tags/$VERSION", "sha": "$GITHUB_SHA" }'
           # create config file from secret
           #echo "write file"
           echo ${{ secrets.PROD_CONFIG_YAML }} > ../../internal/config.yaml
