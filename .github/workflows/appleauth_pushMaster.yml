@@ -31,12 +31,22 @@ jobs:
           VERSION="v1.0.0-beta.12"
           echo "The found version is $VERSION"
           if [ -z $VERSION ]; then exit 99; fi
-          # Create tag on commit
+          echo ::set-env name=NEWVER::$VERSION
+
+          #echo "create tag on sha $GITHUB_SHA"
           #curl -s -X POST https://api.github.com/repos/PixelogicDev/gruveebackend/git/refs \
-          curl -s -X POST https://api.github.com/repos/brettski/gruveebackend/git/refs \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -d '{ "ref": "refs/tags/$VERSION", "sha": "$GITHUB_SHA" }'
+          #curl -s -X POST https://api.github.com/repos/brettski/gruveebackend/git/refs \
+          #-H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          #-d '{ "ref": "refs/tags/$VERSION", "sha": "$GITHUB_SHA" }'          
           # create config file from secret
           #echo "write file"
           echo ${{ secrets.PROD_CONFIG_YAML }} > ../../internal/config.yaml
           cat ../../internal/config.yaml
+      - name: Test var
+        run: |
+          echo "NEWVER: $NEWVER"
+      - name: Tag Commit
+        uses: anothrNick/github-tag-action@1.17.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CUSTOM_TAG: $NEWVER
